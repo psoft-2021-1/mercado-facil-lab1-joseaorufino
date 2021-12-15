@@ -1,9 +1,9 @@
 package com.ufcg.psoft.mercadofacil.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Entity
 public class Cliente {
@@ -13,12 +13,31 @@ public class Cliente {
 	private Long id;
 	
 	private Long CPF;
-	
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Cliente cliente = (Cliente) o;
+		return id.equals(cliente.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
 	private String nome;
 
 	private Integer idade;
 
 	private String endereco;
+
+	@OneToMany
+	private List<Produto> carrinho;
+
+	@OneToMany
+	private List<Compra> compras;
 
 	private Cliente() {}
 
@@ -27,6 +46,8 @@ public class Cliente {
 		this.nome = nome;
 		this.idade = idade;
 		this.endereco = endereco;
+		this.carrinho = new ArrayList<Produto>();
+		this.compras = new ArrayList<Compra>();
 	}
 
 	public Long getId() {
@@ -56,4 +77,17 @@ public class Cliente {
 	public void setEndereco(String endereco) {
 		this.endereco = endereco;
 	}
+
+	public List<Produto> getCarrinho() { return this.carrinho; }
+
+	public void addProdutoCarrinho(Produto produto) { this.carrinho.add(produto); }
+
+	public void rmvProdutoCarrinho(Produto produto) { this.carrinho.remove(produto); }
+
+	public void limparCarrinho() { this.carrinho = new ArrayList<Produto>(); }
+
+	public List<Compra> getCompras() { return this.compras; }
+
+	public void addCompra(Compra compra) { this.compras.add(compra); }
+
 }

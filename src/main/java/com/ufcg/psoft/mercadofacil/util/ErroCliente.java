@@ -11,6 +11,8 @@ public class ErroCliente {
 	
 	static final String CLIENTES_NAO_CASTRADOS = "Não há clienters cadastrados";
 
+	static final String SEM_PRODUTOS_NO_CARRINHO = "Não há produtos no carrinho";
+
 	static final String NAO_FOI_POSSIVEL_ATUALIZAR = "Não foi possível mudar atualizar a situação do cliente %s "
 			+ "nome %s";
 
@@ -29,5 +31,10 @@ public class ErroCliente {
 	public static ResponseEntity<?> erroClienteJaCadastrado(ClienteDTO clienteDTO) {
 		return new ResponseEntity<CustomErrorType>(new CustomErrorType(String.format(ErroCliente.CLIENTE_JA_CADASTRADO,
 				clienteDTO.getCPF(), clienteDTO.getNome())), HttpStatus.CONFLICT);
+	}
+
+	public static ResponseEntity<?> erroSemProdutosNoCarrinho() {
+		return new ResponseEntity<CustomErrorType>(new CustomErrorType(ErroCliente.SEM_PRODUTOS_NO_CARRINHO),
+				HttpStatus.NO_CONTENT);
 	}
 }
