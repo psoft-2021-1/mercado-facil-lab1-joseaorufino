@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import com.ufcg.psoft.mercadofacil.DTO.ClienteDTO;
 import com.ufcg.psoft.mercadofacil.model.Cliente;
+import com.ufcg.psoft.mercadofacil.model.Compra;
+import com.ufcg.psoft.mercadofacil.model.Produto;
 
 public interface ClienteService {
 
@@ -21,5 +23,15 @@ public interface ClienteService {
 	public Cliente criaCliente(ClienteDTO clienteDTO);
 	
 	public Cliente atualizaCliente(ClienteDTO clienteDTO, Cliente cliente);
+
+    public List<Produto> getCarrinho(Cliente cliente);
+
+	public Cliente addProdutoCarrinho(Cliente cliente, Produto produto);
+
+	public Cliente rmvProdutoCarrinho(Cliente cliente, Produto produto);
+
+	public List<Compra> getCompras(Cliente cliente);
+
+	public void addCompra(Compra compra);
 
 }

@@ -17,6 +17,8 @@ public class ErroProduto {
 
 	static final String PRODUTO_JA_CADASTRADO = "O produto %s do fabricante %s já esta cadastrado";
 
+	static final String PRODUTO_INDISPONIVEL = "Produto com id %s não está disponível";
+
 	public static ResponseEntity<CustomErrorType> erroProdutoNaoEnconrtrado(long id) {
 		return new ResponseEntity<CustomErrorType>(new CustomErrorType(String.format(ErroProduto.PRODUTO_NAO_CASTRADO, id)),
 				HttpStatus.NOT_FOUND);
@@ -35,5 +37,10 @@ public class ErroProduto {
 	public static ResponseEntity<?> erroProdutoJaCadastrado(ProdutoDTO produtoDTO) {
 		return new ResponseEntity<CustomErrorType>(new CustomErrorType(String.format(ErroProduto.PRODUTO_JA_CADASTRADO,
 				produtoDTO.getNome(), produtoDTO.getFabricante())), HttpStatus.CONFLICT);
+	}
+
+	public static ResponseEntity<?> erroProdutoIndisponivel(Produto produto) {
+		return new ResponseEntity<CustomErrorType>(new CustomErrorType(String.format(ErroProduto.PRODUTO_INDISPONIVEL,
+				produto.getNome(), produto.getFabricante())), HttpStatus.CONFLICT);
 	}
 }
