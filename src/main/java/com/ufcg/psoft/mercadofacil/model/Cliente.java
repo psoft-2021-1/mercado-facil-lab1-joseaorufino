@@ -14,19 +14,6 @@ public class Cliente {
 	
 	private Long CPF;
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Cliente cliente = (Cliente) o;
-		return id.equals(cliente.id);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
-
 	private String nome;
 
 	private Integer idade;
@@ -89,5 +76,18 @@ public class Cliente {
 	public List<Compra> getCompras() { return this.compras; }
 
 	public void addCompra(Compra compra) { this.compras.add(compra); }
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Cliente cliente = (Cliente) o;
+		return id.equals(cliente.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
 
 }

@@ -6,9 +6,16 @@ import org.springframework.http.ResponseEntity;
 public class ErroCompra {
 
     static final String COMPRA_NAO_CADASTRADA = "Compra com id %s não está cadastrada";
+    static final String FORMA_DE_PAGAMENTO_INDISPONIVEL = "Forma de pagamento com id %s não está disponível";
 
     public static ResponseEntity<?> erroCompraNaoEnconrtrada(long id) {
         return new ResponseEntity<CustomErrorType>(new CustomErrorType(String.format(ErroCompra.COMPRA_NAO_CADASTRADA, id)),
                 HttpStatus.NOT_FOUND);
     }
+
+    public static ResponseEntity<?> erroFormaDePagamentoNaoDisponivel(long id) {
+        return new ResponseEntity<CustomErrorType>(new CustomErrorType(String.format(ErroCompra.FORMA_DE_PAGAMENTO_INDISPONIVEL, id)),
+                HttpStatus.NOT_IMPLEMENTED);
+    }
+
 }

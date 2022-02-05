@@ -2,7 +2,6 @@ package com.ufcg.psoft.mercadofacil.service;
 
 import com.ufcg.psoft.mercadofacil.model.Cliente;
 import com.ufcg.psoft.mercadofacil.model.Compra;
-
 import java.util.List;
 import java.util.Optional;
 

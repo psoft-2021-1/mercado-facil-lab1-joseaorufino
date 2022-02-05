@@ -17,33 +17,23 @@ public class Compra {
     @OneToOne
     private Cliente cliente;
 
-    private BigDecimal valorTotal;
-
-    private LocalDate data;
-
     @OneToMany
     private List<Produto> produtos;
 
+    private BigDecimal valorTotal;
+
+    private FormasDePagamento formaDePagamento;
+
+    private LocalDate data;
+
     private Compra() {}
 
-    public Compra(Cliente cliente, BigDecimal valorTotal, List<Produto> produtos) {
+    public Compra(Cliente cliente, BigDecimal valorTotal, List<Produto> produtos, FormasDePagamento formaDePagamento) {
         this.cliente = cliente;
-        this.valorTotal = valorTotal;
         this.produtos = produtos;
+        this.valorTotal = valorTotal;
+        this.formaDePagamento = formaDePagamento;
         this.data = LocalDate.now();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Compra compra = (Compra) o;
-        return id.equals(compra.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
     }
 
     public Long getId() {
@@ -61,5 +51,22 @@ public class Compra {
     }
 
     public LocalDate getData() { return  data; }
+
+    public FormasDePagamento getFormaDePagamento() { return formaDePagamento; }
+
+    public String getTextoFormaDePagamento() { return formaDePagamento.toString(); }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Compra compra = (Compra) o;
+        return id.equals(compra.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 
 }
