@@ -26,24 +26,24 @@ public class ProdutoApiController {
 
 	@Autowired
 	ProdutoService produtoService;
-	
+
 	@RequestMapping(value = "/produtos", method = RequestMethod.GET)
 	public ResponseEntity<?> listarProdutos() {
-		
+
 		List<Produto> produtos = produtoService.listarProdutos();
-		
+
 		if (produtos.isEmpty()) {
 			return ErroProduto.erroSemProdutosCadastrados();
 		}
-		
+
 		return new ResponseEntity<List<Produto>>(produtos, HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/produto/", method = RequestMethod.POST)
 	public ResponseEntity<?> criarProduto(@RequestBody ProdutoDTO produtoDTO, UriComponentsBuilder ucBuilder) {
 
 		List<Produto> produtos = produtoService.getProdutoByCodigoBarra(produtoDTO.getCodigoBarra());
-		
+
 		if (!produtos.isEmpty()) {
 			return ErroProduto.erroProdutoJaCadastrado(produtoDTO);
 		}
@@ -58,28 +58,28 @@ public class ProdutoApiController {
 	public ResponseEntity<?> consultarProduto(@PathVariable("id") long id) {
 
 		Optional<Produto> optionalProduto = produtoService.getProdutoById(id);
-	
+
 		if (!optionalProduto.isPresent()) {
 			return ErroProduto.erroProdutoNaoEnconrtrado(id);
 		}
-		
+
 		return new ResponseEntity<Produto>(optionalProduto.get(), HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/produto/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<?> atualizarProduto(@PathVariable("id") long id, @RequestBody ProdutoDTO produtoDTO) {
 
 		Optional<Produto> optionalProduto = produtoService.getProdutoById(id);
-		
+
 		if (!optionalProduto.isPresent()) {
 			return ErroProduto.erroProdutoNaoEnconrtrado(id);
 		}
-		
+
 		Produto produto = optionalProduto.get();
-		
+
 		produtoService.atualizaProduto(produtoDTO, produto);
 		produtoService.salvarProdutoCadastrado(produto);
-		
+
 		return new ResponseEntity<Produto>(produto, HttpStatus.OK);
 	}
 
@@ -87,11 +87,11 @@ public class ProdutoApiController {
 	public ResponseEntity<?> removerProduto(@PathVariable("id") long id) {
 
 		Optional<Produto> optionalProduto = produtoService.getProdutoById(id);
-		
+
 		if (!optionalProduto.isPresent()) {
 			return ErroProduto.erroProdutoNaoEnconrtrado(id);
 		}
-				
+
 		produtoService.removerProdutoCadastrado(optionalProduto.get());
 
 		return new ResponseEntity<Produto>(HttpStatus.OK);

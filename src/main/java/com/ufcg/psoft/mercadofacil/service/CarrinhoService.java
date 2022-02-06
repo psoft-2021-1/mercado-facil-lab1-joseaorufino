@@ -14,7 +14,7 @@ public interface CarrinhoService {
 
     public Cliente rmvProdutoCarrinho(Cliente cliente, Produto produto);
 
-    public BigDecimal getValorTotalCarrinho(Cliente cliente);
+    public BigDecimal getValorTotalCarrinho(Cliente cliente, BigDecimal acrescimo);
 
     public void limparCarrinho(Cliente cliente);
 }

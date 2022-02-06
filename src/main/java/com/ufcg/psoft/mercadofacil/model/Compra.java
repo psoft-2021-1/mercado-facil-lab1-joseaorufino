@@ -3,7 +3,6 @@ package com.ufcg.psoft.mercadofacil.model;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,13 +21,13 @@ public class Compra {
 
     private BigDecimal valorTotal;
 
-    private FormasDePagamento formaDePagamento;
+    private FormaDePagamento formaDePagamento;
 
     private LocalDate data;
 
     private Compra() {}
 
-    public Compra(Cliente cliente, BigDecimal valorTotal, List<Produto> produtos, FormasDePagamento formaDePagamento) {
+    public Compra(Cliente cliente, BigDecimal valorTotal, List<Produto> produtos, FormaDePagamento formaDePagamento) {
         this.cliente = cliente;
         this.produtos = produtos;
         this.valorTotal = valorTotal;
@@ -52,9 +51,15 @@ public class Compra {
 
     public LocalDate getData() { return  data; }
 
-    public FormasDePagamento getFormaDePagamento() { return formaDePagamento; }
+    public FormaDePagamento getFormaDePagamento() { return formaDePagamento; }
 
     public String getTextoFormaDePagamento() { return formaDePagamento.toString(); }
+
+    public String getTextoTipoDeCliente() { return cliente.getTipoDeCliente().toString(); }
+
+    public BigDecimal getAcrescimo() { return formaDePagamento.getAcrescimo(); }
+
+    public BigDecimal getPossivelDesconto() { return cliente.getDesconto(); }
 
     @Override
     public boolean equals(Object o) {

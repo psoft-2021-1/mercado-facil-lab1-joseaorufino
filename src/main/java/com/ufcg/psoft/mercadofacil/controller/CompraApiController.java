@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.ufcg.psoft.mercadofacil.model.Compra;
-import com.ufcg.psoft.mercadofacil.model.FormasDePagamento;
+import com.ufcg.psoft.mercadofacil.model.FormaDePagamento;
 import com.ufcg.psoft.mercadofacil.model.Produto;
 import com.ufcg.psoft.mercadofacil.service.CarrinhoService;
 import com.ufcg.psoft.mercadofacil.service.CompraService;
@@ -17,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,7 +42,7 @@ public class CompraApiController {
     public ResponseEntity<?> finalizarCompra(@PathVariable("idCliente") long idCliente, @PathVariable("idFormaDePagamento") long idFormaDePagamento) {
 
         Optional<Cliente> clienteOp = clienteService.getClienteById(idCliente);
-        FormasDePagamento formaDePagamento = pagamentoService.getFormaDePagamentoById(idFormaDePagamento);
+        FormaDePagamento formaDePagamento = pagamentoService.getFormaDePagamentoById(idFormaDePagamento);
 
         if (!clienteOp.isPresent()) {
             return ErroCliente.erroClienteNaoEnconrtrado(idCliente);
@@ -58,11 +57,12 @@ public class CompraApiController {
             return ErroCliente.erroSemProdutosNoCarrinho();
         }
         List<Produto> carrinho = new ArrayList<Produto>(carrinhoService.getCarrinho(cliente));
-        BigDecimal valorTotal = carrinhoService.getValorTotalCarrinho(cliente);
+        BigDecimal valorTotal = carrinhoService.getValorTotalCarrinho(cliente, formaDePagamento.getAcrescimo());
 
         Compra compra = new Compra(cliente, valorTotal, carrinho, formaDePagamento);
         compraService.salvarCompraCadastrada(new Compra(cliente, valorTotal, carrinho, formaDePagamento));
         carrinhoService.limparCarrinho(cliente);
+        clienteService.salvarClienteCadastrado(cliente);
 
         return new ResponseEntity<>(compra, HttpStatus.OK);
     }

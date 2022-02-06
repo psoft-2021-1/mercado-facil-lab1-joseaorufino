@@ -10,16 +10,16 @@ import java.util.Objects;
 @Entity
 public class Lote {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-	
-	@OneToOne
+
+    @OneToOne
     private Produto produto;
     private int numeroDeItens;
 
     private Lote() { }
-    
+
     public Lote(Produto produto, int numeroDeItens) {
         this.produto = produto;
         this.numeroDeItens = numeroDeItens;
