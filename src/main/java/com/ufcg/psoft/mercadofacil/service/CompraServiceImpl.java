@@ -16,14 +16,17 @@ public class CompraServiceImpl implements CompraService {
     @Autowired
     CompraRepository compraRepository;
 
+    @Override
     public Optional<Compra> getCompraById(Long id) {
         return compraRepository.findById(id);
     }
 
+    @Override
     public void salvarCompraCadastrada(Compra compra) {
         compraRepository.save(compra);
     }
 
+    @Override
     public List<Compra> listarCompras(Cliente cliente) {
         List<Compra> compras = new ArrayList<Compra>();
         for (Compra compra : compraRepository.findAll()) {

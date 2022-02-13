@@ -10,29 +10,16 @@ import java.util.Objects;
 @Entity
 public class Lote {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-	
-	@OneToOne
+
+    @OneToOne
     private Produto produto;
     private int numeroDeItens;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Lote lote = (Lote) o;
-        return id.equals(lote.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
     private Lote() { }
-    
+
     public Lote(Produto produto, int numeroDeItens) {
         this.produto = produto;
         this.numeroDeItens = numeroDeItens;
@@ -66,4 +53,18 @@ public class Lote {
                 ", numeroDeItens=" + numeroDeItens + '\'' +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Lote lote = (Lote) o;
+        return id.equals(lote.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
 }

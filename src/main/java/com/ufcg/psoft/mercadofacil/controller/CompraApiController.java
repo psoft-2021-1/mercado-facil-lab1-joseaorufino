@@ -6,16 +6,17 @@ import java.util.List;
 import java.util.Optional;
 
 import com.ufcg.psoft.mercadofacil.model.Compra;
+import com.ufcg.psoft.mercadofacil.model.FormaDePagamento;
 import com.ufcg.psoft.mercadofacil.model.Produto;
 import com.ufcg.psoft.mercadofacil.service.CarrinhoService;
 import com.ufcg.psoft.mercadofacil.service.CompraService;
+import com.ufcg.psoft.mercadofacil.service.PagamentoService;
 import com.ufcg.psoft.mercadofacil.util.ErroCompra;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,14 +35,20 @@ public class CompraApiController {
     CarrinhoService carrinhoService;
     @Autowired
     CompraService compraService;
+    @Autowired
+    PagamentoService pagamentoService;
 
-    @RequestMapping(value = "/compras/{idCliente}/finalizar", method = RequestMethod.POST)
-    public ResponseEntity<?> finalizarCompra(@PathVariable("idCliente") long id) {
+    @RequestMapping(value = "/compras/{idCliente}/{idFormaDePagamento}/finalizar", method = RequestMethod.POST)
+    public ResponseEntity<?> finalizarCompra(@PathVariable("idCliente") long idCliente, @PathVariable("idFormaDePagamento") long idFormaDePagamento) {
 
-        Optional<Cliente> clienteOp = clienteService.getClienteById(id);
+        Optional<Cliente> clienteOp = clienteService.getClienteById(idCliente);
+        FormaDePagamento formaDePagamento = pagamentoService.getFormaDePagamentoById(idFormaDePagamento);
 
         if (!clienteOp.isPresent()) {
-            return ErroCliente.erroClienteNaoEnconrtrado(id);
+            return ErroCliente.erroClienteNaoEnconrtrado(idCliente);
+        }
+        if (formaDePagamento == null) {
+            return ErroCompra.erroFormaDePagamentoNaoDisponivel(idFormaDePagamento);
         }
 
         Cliente cliente = clienteOp.get();
@@ -49,12 +56,13 @@ public class CompraApiController {
         if (cliente.getCarrinho().isEmpty()) {
             return ErroCliente.erroSemProdutosNoCarrinho();
         }
-        List<Produto> carrinho = new ArrayList<Produto>(carrinhoService.getCarrinho(clienteOp.get()));
-        BigDecimal valorTotal = carrinhoService.getValorTotalCarrinho(cliente);
+        List<Produto> carrinho = new ArrayList<Produto>(carrinhoService.getCarrinho(cliente));
+        BigDecimal valorTotal = carrinhoService.getValorTotalCarrinho(cliente, formaDePagamento.getAcrescimo());
 
-        Compra compra = new Compra(cliente, valorTotal, carrinho);
-        compraService.salvarCompraCadastrada(new Compra(cliente, valorTotal, carrinho));
+        Compra compra = new Compra(cliente, valorTotal, carrinho, formaDePagamento);
+        compraService.salvarCompraCadastrada(new Compra(cliente, valorTotal, carrinho, formaDePagamento));
         carrinhoService.limparCarrinho(cliente);
+        clienteService.salvarClienteCadastrado(cliente);
 
         return new ResponseEntity<>(compra, HttpStatus.OK);
     }
@@ -90,72 +98,12 @@ public class CompraApiController {
         return new ResponseEntity<Compra>(compraOp.get(), HttpStatus.OK);
     }
 
-//    @RequestMapping(value = "/carrinho/{idCliente}/add", method = RequestMethod.PUT)
-//    public ResponseEntity<?> addProdutoCarrinho(@PathVariable("idCliente") long id, @RequestBody int idProduto) {
-//
-//        Optional<Cliente> clienteOp = clienteService.getClienteById(id);
-//
-//        if (!clienteOp.isPresent()) {
-//            return ErroCliente.erroClienteNaoEnconrtrado(id);
-//        }
-//
-//        Optional<Produto> optionalProduto = produtoService.getProdutoById(idProduto);
-//
-//        if (!optionalProduto.isPresent()) {
-//            return ErroProduto.erroProdutoNaoEnconrtrado(id);
-//        }
-//
-//        Produto produto = optionalProduto.get();
-//        Cliente cliente = clienteOp.get();
-//
-//        clienteService.salvarClienteCadastrado(carrinhoService.addProdutoCarrinho(cliente, produto));
-//
-//        return new ResponseEntity<>(produto, HttpStatus.OK);
-//    }
-//
-//    @RequestMapping(value = "/carrinho/{idCliente}/rmv", method = RequestMethod.PUT)
-//    public ResponseEntity<?> rmvProdutoCarrinho(@PathVariable("idCliente") long id, @RequestBody int idProduto) {
-//
-//        Optional<Cliente> clienteOp = clienteService.getClienteById(id);
-//
-//        if (!clienteOp.isPresent()) {
-//            return ErroCliente.erroClienteNaoEnconrtrado(id);
-//        }
-//
-//        Optional<Produto> optionalProduto = produtoService.getProdutoById(idProduto);
-//
-//        if (!optionalProduto.isPresent()) {
-//            return ErroProduto.erroProdutoNaoEnconrtrado(id);
-//        }
-//
-//        Produto produto = optionalProduto.get();
-//        Cliente cliente = clienteOp.get();
-//
-//        clienteService.salvarClienteCadastrado(carrinhoService.rmvProdutoCarrinho(cliente, produto));
-//
-//        return new ResponseEntity<>(produto, HttpStatus.OK);
-//    }
-//
-//    @RequestMapping(value = "/carrinho/{idCliente}/finalizar", method = RequestMethod.POST)
-//    public ResponseEntity<?> fecharCarrinho(@PathVariable("idCliente") long id) {
-//
-//        Optional<Cliente> clienteOp = clienteService.getClienteById(id);
-//
-//        if (!clienteOp.isPresent()) {
-//            return ErroCliente.erroClienteNaoEnconrtrado(id);
-//        }
-//
-//        Cliente cliente = clienteOp.get();
-//
-//        if (cliente.getCarrinho().isEmpty()) {
-//            return ErroCliente.erroSemProdutosNoCarrinho();
-//        }
-//        List<Produto> carrinho = new ArrayList<Produto>(carrinhoService.getCarrinho(clienteOp.get()));
-//        BigDecimal valorTotal = carrinhoService.getValorTotalCarrinho(cliente);
-//
-//        Compra compra = new Compra(cliente, valorTotal, carrinho);
-//        compraService.salvarCompraCadastrada(compra);
-//
-//        return new ResponseEntity<>(compra, HttpStatus.OK);
-//    }
+    @RequestMapping(value = "/compras/formasPagamento", method = RequestMethod.GET)
+    public ResponseEntity<?> listarFormasDePagamento() {
+
+        String formas = pagamentoService.listarFormasDePagamento();
+
+        return new ResponseEntity<String>(formas, HttpStatus.OK);
+    }
+
 }

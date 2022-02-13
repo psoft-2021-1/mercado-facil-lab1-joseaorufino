@@ -1,6 +1,7 @@
 package com.ufcg.psoft.mercadofacil.model;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -11,21 +12,8 @@ public class Cliente {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	private Long CPF;
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Cliente cliente = (Cliente) o;
-		return id.equals(cliente.id);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
 
 	private String nome;
 
@@ -38,6 +26,10 @@ public class Cliente {
 
 	@OneToMany
 	private List<Compra> compras;
+
+	private TipoDeCliente tipoDeCliente;
+
+	private BigDecimal desconto;
 
 	private Cliente() {}
 
@@ -89,5 +81,35 @@ public class Cliente {
 	public List<Compra> getCompras() { return this.compras; }
 
 	public void addCompra(Compra compra) { this.compras.add(compra); }
+
+	public TipoDeCliente getTipoDeCliente() { return tipoDeCliente; }
+
+	public String getTextoTipoDeCliente() {
+		if (tipoDeCliente == null) {
+			return "Tipo de Cliente não estabelecido.";
+		}
+		return tipoDeCliente.toString();
+	}
+
+	public BigDecimal getDesconto() { return desconto; }
+
+	public void setTipoDeCliente(TipoDeCliente tipoDeCliente) {
+		this.tipoDeCliente = tipoDeCliente;
+		this.desconto = tipoDeCliente.getDesconto();
+	}
+
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		Cliente cliente = (Cliente) o;
+		return id.equals(cliente.id);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
 
 }
