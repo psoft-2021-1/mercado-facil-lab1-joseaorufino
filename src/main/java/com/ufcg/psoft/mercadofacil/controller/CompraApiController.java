@@ -53,18 +53,19 @@ public class CompraApiController {
 
         Cliente cliente = clienteOp.get();
 
-        if (cliente.getCarrinho().isEmpty()) {
+        if (cliente.getCarrinho().getProdutos().isEmpty()) {
             return ErroCliente.erroSemProdutosNoCarrinho();
         }
-        List<Produto> carrinho = new ArrayList<Produto>(carrinhoService.getCarrinho(cliente));
+        List<Produto> produtosCarrinho = List.copyOf(carrinhoService.getProdutosCarrinho(cliente));
         BigDecimal valorTotal = carrinhoService.getValorTotalCarrinho(cliente, formaDePagamento.getAcrescimo());
 
-        Compra compra = new Compra(cliente, valorTotal, carrinho, formaDePagamento);
-        compraService.salvarCompraCadastrada(new Compra(cliente, valorTotal, carrinho, formaDePagamento));
+        Compra compra = new Compra(cliente, valorTotal, produtosCarrinho, formaDePagamento);
+        compraService.salvarCompraCadastrada(new Compra(cliente, valorTotal, produtosCarrinho, formaDePagamento));
         carrinhoService.limparCarrinho(cliente);
         clienteService.salvarClienteCadastrado(cliente);
+        carrinhoService.salvarCarrinho(cliente.getCarrinho());
 
-        return new ResponseEntity<>(compra, HttpStatus.OK);
+        return new ResponseEntity<Compra>(compra, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/compras/{idCliente}", method = RequestMethod.GET)

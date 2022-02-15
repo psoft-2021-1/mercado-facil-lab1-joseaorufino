@@ -3,7 +3,9 @@ package com.ufcg.psoft.mercadofacil.controller;
 import java.util.List;
 import java.util.Optional;
 
+import com.ufcg.psoft.mercadofacil.model.Carrinho;
 import com.ufcg.psoft.mercadofacil.model.TipoDeCliente;
+import com.ufcg.psoft.mercadofacil.service.CarrinhoService;
 import com.ufcg.psoft.mercadofacil.util.ErroCompra;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,8 @@ public class ClienteApiController {
 
 	@Autowired
 	ClienteService clienteService;
+	@Autowired
+	CarrinhoService carrinhoService;
 
 	@RequestMapping(value = "/clientes", method = RequestMethod.GET)
 	public ResponseEntity<?> listarClientes() {
@@ -52,6 +56,7 @@ public class ClienteApiController {
 
 		Cliente cliente = clienteService.criaCliente(clienteDTO);
 		clienteService.salvarClienteCadastrado(cliente);
+		carrinhoService.salvarCarrinho(cliente.getCarrinho());
 
 		return new ResponseEntity<Cliente>(cliente, HttpStatus.CREATED);
 	}
@@ -81,6 +86,7 @@ public class ClienteApiController {
 
 		clienteService.atualizaCliente(clienteDTO, cliente);
 		clienteService.salvarClienteCadastrado(cliente);
+		carrinhoService.salvarCarrinho(cliente.getCarrinho());
 
 		return new ResponseEntity<Cliente>(cliente, HttpStatus.OK);
 	}

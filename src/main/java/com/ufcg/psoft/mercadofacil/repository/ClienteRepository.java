@@ -8,4 +8,5 @@ import com.ufcg.psoft.mercadofacil.model.Cliente;
 public interface ClienteRepository extends JpaRepository<Cliente, Long>{
 
 	Optional<Cliente> findByCPF(long cpf);
+
 }

@@ -44,7 +44,10 @@ public class ClienteServiceImpl implements ClienteService {
 	public Cliente criaCliente(ClienteDTO clienteDTO) {
 		Cliente cliente = new Cliente(clienteDTO.getCPF(), clienteDTO.getNome(),
 				clienteDTO.getIdade(), clienteDTO.getEndereco());
-
+		Carrinho carrinho = new Carrinho();
+		cliente.setCarrinho(carrinho);
+		carrinho.setCliente(cliente);
+		clienteRepository.save(cliente);
 		return cliente;
 	}
 
@@ -53,23 +56,6 @@ public class ClienteServiceImpl implements ClienteService {
 		cliente.setIdade(clienteDTO.getIdade());
 		cliente.setEndereco(clienteDTO.getEndereco());
 
-		return cliente;
-	}
-
-	@Override
-	public List<Produto> getCarrinho(Cliente cliente) {
-		return cliente.getCarrinho();
-	}
-
-	@Override
-	public Cliente addProdutoCarrinho(Cliente cliente, Produto produto) {
-		cliente.addProdutoCarrinho(produto);
-		return cliente;
-	}
-
-	@Override
-	public Cliente rmvProdutoCarrinho(Cliente cliente, Produto produto) {
-		cliente.rmvProdutoCarrinho(produto);
 		return cliente;
 	}
 

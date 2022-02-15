@@ -1,5 +1,7 @@
 package com.ufcg.psoft.mercadofacil.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -21,12 +23,14 @@ public class Cliente {
 
 	private String endereco;
 
-	@OneToMany
-	private List<Produto> carrinho;
+	@OneToOne(mappedBy = "cliente", cascade = CascadeType.PERSIST)
+	private Carrinho carrinho;
 
 	@OneToMany
+	@JsonIgnore
 	private List<Compra> compras;
 
+	@Enumerated(EnumType.STRING)
 	private TipoDeCliente tipoDeCliente;
 
 	private BigDecimal desconto;
@@ -38,8 +42,10 @@ public class Cliente {
 		this.nome = nome;
 		this.idade = idade;
 		this.endereco = endereco;
-		this.carrinho = new ArrayList<Produto>();
+		this.carrinho = new Carrinho();
 		this.compras = new ArrayList<Compra>();
+		this.tipoDeCliente = TipoDeCliente.NORMAL;
+		this.desconto = tipoDeCliente.getDesconto();
 	}
 
 	public Long getId() {
@@ -70,13 +76,7 @@ public class Cliente {
 		this.endereco = endereco;
 	}
 
-	public List<Produto> getCarrinho() { return this.carrinho; }
-
-	public void addProdutoCarrinho(Produto produto) { this.carrinho.add(produto); }
-
-	public void rmvProdutoCarrinho(Produto produto) { this.carrinho.remove(produto); }
-
-	public void limparCarrinho() { this.carrinho = new ArrayList<Produto>(); }
+	public Carrinho getCarrinho() { return this.carrinho; }
 
 	public List<Compra> getCompras() { return this.compras; }
 
@@ -112,4 +112,5 @@ public class Cliente {
 		return Objects.hash(id);
 	}
 
+	public void setCarrinho(Carrinho carrinho) { this.carrinho = carrinho; }
 }

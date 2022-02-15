@@ -12,4 +12,7 @@ public interface LoteService {
 	public void salvarLote(Lote lote);
 
 	public Lote criaLote(int numItens, Produto produto);
+
+	public Lote verificaLoteProduto(Produto produto);
+
 }
