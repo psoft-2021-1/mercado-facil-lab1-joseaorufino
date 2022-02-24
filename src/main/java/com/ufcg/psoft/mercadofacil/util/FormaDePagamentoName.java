@@ -1,10 +1,8 @@
-package com.ufcg.psoft.mercadofacil.model;
+package com.ufcg.psoft.mercadofacil.util;
 
 
-public enum FormaDePagamento {
-
+public enum FormaDePagamentoName {
     BOLETO(),
     PAYPAL(),
     CARTAO();
-
 }

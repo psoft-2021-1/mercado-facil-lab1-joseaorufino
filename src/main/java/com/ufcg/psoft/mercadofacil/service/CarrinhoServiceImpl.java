@@ -2,6 +2,7 @@ package com.ufcg.psoft.mercadofacil.service;
 
 import com.ufcg.psoft.mercadofacil.model.*;
 import com.ufcg.psoft.mercadofacil.repository.CarrinhoRepository;
+import com.ufcg.psoft.mercadofacil.util.FormaDePagamento;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -60,24 +61,35 @@ public class CarrinhoServiceImpl implements CarrinhoService {
     }
 
     @Override
-    public BigDecimal getValorTotalCarrinho(Cliente cliente, BigDecimal acrescimo) {
-        return calculaValorTotalCarrinho(cliente, acrescimo);
+    public BigDecimal getValorTotalCarrinho(Cliente cliente, FormaDePagamento formaDePagamento) {
+        return formaDePagamento.calculaValorTotalCarrinho(calculaValorInicialCarrinho(cliente));
     }
 
-    private BigDecimal calculaValorTotalCarrinho(Cliente cliente, BigDecimal acrescimo) {
+
+    private BigDecimal calculaValorInicialCarrinho(Cliente cliente) {
         List<Produto> produtos = cliente.getCarrinho().getProdutos();
-        BigDecimal soma = new BigDecimal(0);
+        BigDecimal somaInicial = new BigDecimal(0);
 
         for (Produto produto : produtos) {
-            soma = soma.add(produto.getPreco());
+            somaInicial = somaInicial.add(produto.getPreco());
         }
-        BigDecimal incremento = soma.multiply(acrescimo);
-        BigDecimal decremento = soma.multiply(cliente.getDesconto());
-        soma = soma.add(incremento);
-        soma = soma.subtract(decremento);
-
-        return soma;
+        return somaInicial;
     }
+
+//    private BigDecimal calculaValorTotalCarrinho(Cliente cliente, BigDecimal acrescimo) {
+//        List<Produto> produtos = cliente.getCarrinho().getProdutos();
+//        BigDecimal soma = new BigDecimal(0);
+//
+//        for (Produto produto : produtos) {
+//            soma = soma.add(produto.getPreco());
+//        }
+//        BigDecimal incremento = soma.multiply(acrescimo);
+//        BigDecimal decremento = soma.multiply(cliente.getDesconto());
+//        soma = soma.add(incremento);
+//        soma = soma.subtract(decremento);
+//
+//        return soma;
+//    }
 
     @Override
     public void limparCarrinho(Cliente cliente) {

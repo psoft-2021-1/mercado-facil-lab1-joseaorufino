@@ -3,6 +3,7 @@ package com.ufcg.psoft.mercadofacil.service;
 import com.ufcg.psoft.mercadofacil.model.Carrinho;
 import com.ufcg.psoft.mercadofacil.model.Cliente;
 import com.ufcg.psoft.mercadofacil.model.Produto;
+import com.ufcg.psoft.mercadofacil.util.FormaDePagamento;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -17,7 +18,7 @@ public interface CarrinhoService {
 
     public Cliente rmvProdutoCarrinho(Cliente cliente, Produto produto);
 
-    public BigDecimal getValorTotalCarrinho(Cliente cliente, BigDecimal acrescimo);
+    public BigDecimal getValorTotalCarrinho(Cliente cliente, FormaDePagamento formaDePagamento);
 
     public void limparCarrinho(Cliente cliente);
 

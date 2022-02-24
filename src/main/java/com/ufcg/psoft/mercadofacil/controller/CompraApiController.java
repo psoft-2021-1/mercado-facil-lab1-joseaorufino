@@ -1,12 +1,13 @@
 package com.ufcg.psoft.mercadofacil.controller;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.ufcg.psoft.mercadofacil.DTO.FormaDePagamentoDTO;
 import com.ufcg.psoft.mercadofacil.model.Compra;
-import com.ufcg.psoft.mercadofacil.model.FormaDePagamento;
+import com.ufcg.psoft.mercadofacil.util.FormaDePagamento;
+import com.ufcg.psoft.mercadofacil.util.FormaDePagamentoName;
 import com.ufcg.psoft.mercadofacil.model.Produto;
 import com.ufcg.psoft.mercadofacil.service.CarrinhoService;
 import com.ufcg.psoft.mercadofacil.service.CompraService;
@@ -38,18 +39,18 @@ public class CompraApiController {
     @Autowired
     PagamentoService pagamentoService;
 
-    @RequestMapping(value = "/compras/{idCliente}/{idFormaDePagamento}/finalizar", method = RequestMethod.POST)
-    public ResponseEntity<?> finalizarCompra(@PathVariable("idCliente") long idCliente, @PathVariable("idFormaDePagamento") long idFormaDePagamento) {
+    @RequestMapping(value = "/compras/{idCliente}/{formaDePagamento}/finalizar", method = RequestMethod.POST)
+    public ResponseEntity<?> finalizarCompra(@PathVariable("idCliente") long idCliente, @PathVariable("formaDePagamentoNome") String formaDePagamentoNome) {
 
         Optional<Cliente> clienteOp = clienteService.getClienteById(idCliente);
-        FormaDePagamento formaDePagamento = pagamentoService.getFormaDePagamentoById(idFormaDePagamento);
+        FormaDePagamento formaDePagamento = pagamentoService.getFormaDePagamentoByNome(formaDePagamentoNome);
 
         if (!clienteOp.isPresent()) {
             return ErroCliente.erroClienteNaoEnconrtrado(idCliente);
         }
-        if (formaDePagamento == null) {
-            return ErroCompra.erroFormaDePagamentoNaoDisponivel(idFormaDePagamento);
-        }
+//        if (formaDePagamento == null) {
+//            return ErroCompra.erroFormaDePagamentoNaoDisponivel(idFormaDePagamento);
+//        }
 
         Cliente cliente = clienteOp.get();
 
@@ -57,10 +58,10 @@ public class CompraApiController {
             return ErroCliente.erroSemProdutosNoCarrinho();
         }
         List<Produto> produtosCarrinho = List.copyOf(carrinhoService.getProdutosCarrinho(cliente));
-        BigDecimal valorTotal = carrinhoService.getValorTotalCarrinho(cliente, formaDePagamento.getAcrescimo());
+        BigDecimal valorTotal = carrinhoService.getValorTotalCarrinho(cliente, formaDePagamento);
 
-        Compra compra = new Compra(cliente, valorTotal, produtosCarrinho, formaDePagamento);
-        compraService.salvarCompraCadastrada(new Compra(cliente, valorTotal, produtosCarrinho, formaDePagamento));
+        Compra compra = new Compra(cliente, valorTotal, produtosCarrinho, formaDePagamento.getFormaDePagamentoName());
+        compraService.salvarCompraCadastrada(compra);
         carrinhoService.limparCarrinho(cliente);
         clienteService.salvarClienteCadastrado(cliente);
         carrinhoService.salvarCarrinho(cliente.getCarrinho());
@@ -102,9 +103,9 @@ public class CompraApiController {
     @RequestMapping(value = "/compras/formasPagamento", method = RequestMethod.GET)
     public ResponseEntity<?> listarFormasDePagamento() {
 
-        String formas = pagamentoService.listarFormasDePagamento();
+        List<FormaDePagamentoDTO> formas = pagamentoService.listarFormasDePagamento();
 
-        return new ResponseEntity<String>(formas, HttpStatus.OK);
+        return new ResponseEntity<List<FormaDePagamentoDTO>>(formas, HttpStatus.OK);
     }
 
 }
