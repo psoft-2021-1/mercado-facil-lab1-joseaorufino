@@ -1,14 +1,12 @@
 package com.ufcg.psoft.mercadofacil.service;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-
 import com.ufcg.psoft.mercadofacil.DTO.ClienteDTO;
+import com.ufcg.psoft.mercadofacil.DTO.TipoDeClienteDTO;
 import com.ufcg.psoft.mercadofacil.model.Cliente;
 import com.ufcg.psoft.mercadofacil.model.Compra;
-import com.ufcg.psoft.mercadofacil.model.Produto;
-import com.ufcg.psoft.mercadofacil.model.TipoDeCliente;
+import com.ufcg.psoft.mercadofacil.util.TipoDeCliente;
 
 public interface ClienteService {
 
@@ -30,14 +28,9 @@ public interface ClienteService {
 
 	public void addCompra(Compra compra);
 
-	public String listarTiposDeCliente();
+	public List<TipoDeClienteDTO> listarTiposDeCliente();
 
 	public Cliente estabelecerTipoDeCliente(Cliente cliente, TipoDeCliente tipoDeCliente);
 
-	public TipoDeCliente getTipoDeClienteById(Long idTipoDeCliente);
-
-	public BigDecimal getDescontoByIdTipoDeCliente(Long idTipoDeCLiente);
-
-
-
+	TipoDeCliente getTipoDeClienteByNome(String tipoDeClienteNome);
 }

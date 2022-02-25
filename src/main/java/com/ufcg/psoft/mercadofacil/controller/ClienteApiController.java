@@ -2,11 +2,9 @@ package com.ufcg.psoft.mercadofacil.controller;
 
 import java.util.List;
 import java.util.Optional;
-
-import com.ufcg.psoft.mercadofacil.model.Carrinho;
-import com.ufcg.psoft.mercadofacil.model.TipoDeCliente;
+import com.ufcg.psoft.mercadofacil.DTO.TipoDeClienteDTO;
 import com.ufcg.psoft.mercadofacil.service.CarrinhoService;
-import com.ufcg.psoft.mercadofacil.util.ErroCompra;
+import com.ufcg.psoft.mercadofacil.util.TipoDeCliente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import com.ufcg.psoft.mercadofacil.DTO.ClienteDTO;
 import com.ufcg.psoft.mercadofacil.model.Cliente;
 import com.ufcg.psoft.mercadofacil.service.ClienteService;
@@ -108,23 +105,23 @@ public class ClienteApiController {
 	@RequestMapping(value = "/cliente/tiposDeCliente", method = RequestMethod.GET)
 	public ResponseEntity<?> listarTiposDeCliente() {
 
-		String tipos = clienteService.listarTiposDeCliente();
+		List<TipoDeClienteDTO> tiposDeCliente = clienteService.listarTiposDeCliente();
 
-		return new ResponseEntity<String>(tipos, HttpStatus.OK);
+		return new ResponseEntity<List<TipoDeClienteDTO>>(tiposDeCliente, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/cliente/{idCliente}/{idTipoDeCliente}", method = RequestMethod.PUT)
-	public ResponseEntity<?> estabelecerTipoDeCliente(@PathVariable("idCliente") long idCliente, @PathVariable("idTipoDeCliente") long idTipoDeCliente) {
+	@RequestMapping(value = "/cliente/{idCliente}/{tipoDeClienteNome}", method = RequestMethod.PUT)
+	public ResponseEntity<?> estabelecerTipoDeCliente(@PathVariable("idCliente") long idCliente, @PathVariable("tipoDeClienteNome") String tipoDeClienteNome) {
 
 		Optional<Cliente> clienteOp = clienteService.getClienteById(idCliente);
-		TipoDeCliente tipoDeCliente = clienteService.getTipoDeClienteById(idTipoDeCliente);
+		TipoDeCliente tipoDeCliente = clienteService.getTipoDeClienteByNome(tipoDeClienteNome);
 
 		if (!clienteOp.isPresent()) {
 			return ErroCliente.erroClienteNaoEnconrtrado(idCliente);
 		}
 
 		if (tipoDeCliente == null) {
-			return ErroCliente.erroTipoDeClienteNaoDisponivel(idTipoDeCliente);
+			return ErroCliente.erroTipoDeClienteNaoDisponivel(tipoDeClienteNome);
 		}
 
 		Cliente cliente = clienteOp.get();

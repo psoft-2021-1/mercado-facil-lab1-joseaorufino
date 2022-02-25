@@ -3,16 +3,13 @@ package com.ufcg.psoft.mercadofacil.controller;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-
 import com.ufcg.psoft.mercadofacil.DTO.FormaDePagamentoDTO;
 import com.ufcg.psoft.mercadofacil.model.Compra;
-import com.ufcg.psoft.mercadofacil.util.FormaDePagamento;
-import com.ufcg.psoft.mercadofacil.util.FormaDePagamentoName;
+import com.ufcg.psoft.mercadofacil.util.*;
 import com.ufcg.psoft.mercadofacil.model.Produto;
 import com.ufcg.psoft.mercadofacil.service.CarrinhoService;
 import com.ufcg.psoft.mercadofacil.service.CompraService;
 import com.ufcg.psoft.mercadofacil.service.PagamentoService;
-import com.ufcg.psoft.mercadofacil.util.ErroCompra;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import com.ufcg.psoft.mercadofacil.model.Cliente;
 import com.ufcg.psoft.mercadofacil.service.ClienteService;
-import com.ufcg.psoft.mercadofacil.util.ErroCliente;
 
 @RestController
 @RequestMapping("/api")
@@ -39,7 +35,7 @@ public class CompraApiController {
     @Autowired
     PagamentoService pagamentoService;
 
-    @RequestMapping(value = "/compras/{idCliente}/{formaDePagamento}/finalizar", method = RequestMethod.POST)
+    @RequestMapping(value = "/compras/{idCliente}/{formaDePagamentoNome}/finalizar", method = RequestMethod.POST)
     public ResponseEntity<?> finalizarCompra(@PathVariable("idCliente") long idCliente, @PathVariable("formaDePagamentoNome") String formaDePagamentoNome) {
 
         Optional<Cliente> clienteOp = clienteService.getClienteById(idCliente);
@@ -48,17 +44,18 @@ public class CompraApiController {
         if (!clienteOp.isPresent()) {
             return ErroCliente.erroClienteNaoEnconrtrado(idCliente);
         }
-//        if (formaDePagamento == null) {
-//            return ErroCompra.erroFormaDePagamentoNaoDisponivel(idFormaDePagamento);
-//        }
+        if (formaDePagamento == null) {
+            return ErroCompra.erroFormaDePagamentoNaoDisponivel(formaDePagamentoNome);
+        }
 
         Cliente cliente = clienteOp.get();
+        TipoDeCliente tipoDeCliente = clienteService.getTipoDeClienteByNome(cliente.getTipoDeCliente().toString());
 
         if (cliente.getCarrinho().getProdutos().isEmpty()) {
             return ErroCliente.erroSemProdutosNoCarrinho();
         }
         List<Produto> produtosCarrinho = List.copyOf(carrinhoService.getProdutosCarrinho(cliente));
-        BigDecimal valorTotal = carrinhoService.getValorTotalCarrinho(cliente, formaDePagamento);
+        BigDecimal valorTotal = carrinhoService.getValorTotalCarrinho(cliente, formaDePagamento, tipoDeCliente);
 
         Compra compra = new Compra(cliente, valorTotal, produtosCarrinho, formaDePagamento.getFormaDePagamentoName());
         compraService.salvarCompraCadastrada(compra);

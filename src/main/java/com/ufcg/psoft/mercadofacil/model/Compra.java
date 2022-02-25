@@ -1,7 +1,7 @@
 package com.ufcg.psoft.mercadofacil.model;
 
 import com.ufcg.psoft.mercadofacil.util.FormaDePagamentoName;
-
+import com.ufcg.psoft.mercadofacil.util.TipoDeClienteName;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -56,13 +56,7 @@ public class Compra {
 
     public FormaDePagamentoName getFormaDePagamento() { return formaDePagamento; }
 
-    public String getTextoFormaDePagamento() { return formaDePagamento.toString(); }
-
-    public String getTextoTipoDeCliente() { return cliente.getTipoDeCliente().toString(); }
-
-//    public BigDecimal getAcrescimo() { return formaDePagamento.getAcrescimo(); }
-
-    public BigDecimal getPossivelDesconto() { return cliente.getDesconto(); }
+    public TipoDeClienteName getTipoDeCliente() { return cliente.getTipoDeCliente(); }
 
     @Override
     public boolean equals(Object o) {

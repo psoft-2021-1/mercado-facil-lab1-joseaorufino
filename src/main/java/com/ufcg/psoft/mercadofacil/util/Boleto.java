@@ -12,7 +12,7 @@ public class Boleto implements FormaDePagamento {
     }
 
     @Override
-    public BigDecimal calculaValorTotalCarrinho(BigDecimal valorInicial) {
+    public BigDecimal calculaValorComAcrescimo(BigDecimal valorInicial) {
         BigDecimal incremento = valorInicial.multiply(new BigDecimal(0.00));
         BigDecimal valorFinal = valorInicial.add(incremento);
 

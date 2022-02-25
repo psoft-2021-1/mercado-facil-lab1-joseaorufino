@@ -1,9 +1,8 @@
 package com.ufcg.psoft.mercadofacil.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
+import com.ufcg.psoft.mercadofacil.util.TipoDeClienteName;
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -31,9 +30,7 @@ public class Cliente {
 	private List<Compra> compras;
 
 	@Enumerated(EnumType.STRING)
-	private TipoDeCliente tipoDeCliente;
-
-	private BigDecimal desconto;
+	private TipoDeClienteName tipoDeCliente;
 
 	private Cliente() {}
 
@@ -44,8 +41,7 @@ public class Cliente {
 		this.endereco = endereco;
 		this.carrinho = new Carrinho();
 		this.compras = new ArrayList<Compra>();
-		this.tipoDeCliente = TipoDeCliente.NORMAL;
-		this.desconto = tipoDeCliente.getDesconto();
+		this.tipoDeCliente = TipoDeClienteName.NORMAL;
 	}
 
 	public Long getId() {
@@ -82,22 +78,13 @@ public class Cliente {
 
 	public void addCompra(Compra compra) { this.compras.add(compra); }
 
-	public TipoDeCliente getTipoDeCliente() { return tipoDeCliente; }
-
-	public String getTextoTipoDeCliente() {
-		if (tipoDeCliente == null) {
-			return "Tipo de Cliente não estabelecido.";
-		}
-		return tipoDeCliente.toString();
+	public TipoDeClienteName getTipoDeCliente() {
+		return tipoDeCliente;
 	}
 
-	public BigDecimal getDesconto() { return desconto; }
-
-	public void setTipoDeCliente(TipoDeCliente tipoDeCliente) {
+	public void setTipoDeCliente(TipoDeClienteName tipoDeCliente) {
 		this.tipoDeCliente = tipoDeCliente;
-		this.desconto = tipoDeCliente.getDesconto();
 	}
-
 
 	@Override
 	public boolean equals(Object o) {
@@ -113,4 +100,5 @@ public class Cliente {
 	}
 
 	public void setCarrinho(Carrinho carrinho) { this.carrinho = carrinho; }
+
 }
