@@ -26,12 +26,6 @@ public interface ClienteService {
 
 	public Cliente atualizaCliente(ClienteDTO clienteDTO, Cliente cliente);
 
-	public List<Produto> getCarrinho(Cliente cliente);
-
-	public Cliente addProdutoCarrinho(Cliente cliente, Produto produto);
-
-	public Cliente rmvProdutoCarrinho(Cliente cliente, Produto produto);
-
 	public List<Compra> getCompras(Cliente cliente);
 
 	public void addCompra(Compra compra);

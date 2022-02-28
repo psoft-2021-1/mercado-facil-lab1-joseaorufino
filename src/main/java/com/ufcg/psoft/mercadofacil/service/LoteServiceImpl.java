@@ -30,4 +30,16 @@ public class LoteServiceImpl implements LoteService {
 		Lote lote = new Lote(produto, numItens);
 		return lote;
 	}
+
+	@Override
+	public Lote verificaLoteProduto(Produto produto) {
+		List<Lote> lotes = listarLotes();
+
+		for (Lote lote : lotes) {
+			if (lote.getProduto().equals(produto)) {
+				return lote;
+			}
+		}
+		return null;
+	}
 }

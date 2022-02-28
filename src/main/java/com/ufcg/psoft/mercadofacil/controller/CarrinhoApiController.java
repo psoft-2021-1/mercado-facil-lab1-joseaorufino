@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.ufcg.psoft.mercadofacil.model.Carrinho;
 import com.ufcg.psoft.mercadofacil.model.Compra;
 import com.ufcg.psoft.mercadofacil.model.Produto;
 import com.ufcg.psoft.mercadofacil.service.CarrinhoService;
@@ -35,8 +36,6 @@ public class CarrinhoApiController {
     CarrinhoService carrinhoService;
     @Autowired
     ProdutoService produtoService;
-    @Autowired
-    CompraService compraService;
 
     @RequestMapping(value = "/carrinho/{idCliente}", method = RequestMethod.GET)
     public ResponseEntity<?> listarCarrinho(@PathVariable("idCliente") long id) {
@@ -46,10 +45,9 @@ public class CarrinhoApiController {
         if (!clienteOp.isPresent()) {
             return ErroCliente.erroClienteNaoEnconrtrado(id);
         }
+        Carrinho carrinho = carrinhoService.getCarrinho(clienteOp.get());
 
-        List<Produto> produtosCarrinho = carrinhoService.getCarrinho(clienteOp.get());
-
-        return new ResponseEntity<List<Produto>>(produtosCarrinho, HttpStatus.OK);
+        return new ResponseEntity<Carrinho>(carrinho, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/carrinho/{idCliente}/add", method = RequestMethod.PUT)
@@ -75,6 +73,7 @@ public class CarrinhoApiController {
         Cliente cliente = clienteOp.get();
 
         clienteService.salvarClienteCadastrado(carrinhoService.addProdutoCarrinho(cliente, produto));
+        carrinhoService.salvarCarrinho(cliente.getCarrinho());
 
         return new ResponseEntity<>(produto, HttpStatus.OK);
     }
@@ -98,6 +97,7 @@ public class CarrinhoApiController {
         Cliente cliente = clienteOp.get();
 
         clienteService.salvarClienteCadastrado(carrinhoService.rmvProdutoCarrinho(cliente, produto));
+        carrinhoService.salvarCarrinho(cliente.getCarrinho());
 
         return new ResponseEntity<>(produto, HttpStatus.OK);
     }
