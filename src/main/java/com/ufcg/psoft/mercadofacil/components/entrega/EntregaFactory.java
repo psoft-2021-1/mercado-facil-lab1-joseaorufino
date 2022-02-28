@@ -19,6 +19,7 @@ public class EntregaFactory {
     public Entrega encontrarEntrega(EntregaName entregaName) {
         return tiposDeEntrega.get(entregaName);
     }
+
     private void criarEntrega(Set<Entrega> entregaSet) {
         tiposDeEntrega = new HashMap<EntregaName, Entrega>();
         entregaSet.forEach(

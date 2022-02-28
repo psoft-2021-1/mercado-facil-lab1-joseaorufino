@@ -2,6 +2,8 @@ package com.ufcg.psoft.mercadofacil.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ufcg.psoft.mercadofacil.components.cliente.TipoDeClienteName;
+import com.ufcg.psoft.mercadofacil.components.entrega.EntregaName;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +33,7 @@ public class Cliente {
 
 	@Enumerated(EnumType.STRING)
 	private TipoDeClienteName tipoDeCliente;
+
 
 	private Cliente() {}
 
@@ -85,6 +88,7 @@ public class Cliente {
 	public void setTipoDeCliente(TipoDeClienteName tipoDeCliente) {
 		this.tipoDeCliente = tipoDeCliente;
 	}
+
 
 	@Override
 	public boolean equals(Object o) {

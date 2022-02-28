@@ -1,5 +1,6 @@
 package com.ufcg.psoft.mercadofacil.model;
 
+import com.ufcg.psoft.mercadofacil.components.entrega.EntregaName;
 import com.ufcg.psoft.mercadofacil.components.pagamento.FormaDePagamentoName;
 import com.ufcg.psoft.mercadofacil.components.cliente.TipoDeClienteName;
 import com.ufcg.psoft.mercadofacil.components.produto.TipoProdutoName;
@@ -31,16 +32,20 @@ public class Compra {
     @Enumerated(EnumType.STRING)
     private TipoProdutoName tipoEntrega;
 
+    @Enumerated(EnumType.STRING)
+    private EntregaName entregaName;
+
     private LocalDate data;
 
     private Compra() {}
 
-    public Compra(Cliente cliente, BigDecimal valorTotal, List<Produto> produtos, FormaDePagamentoName formaDePagamento, TipoProdutoName tipoEntrega) {
+    public Compra(Cliente cliente, BigDecimal valorTotal, List<Produto> produtos, FormaDePagamentoName formaDePagamento, TipoProdutoName tipoEntrega, EntregaName entrega) {
         this.cliente = cliente;
         this.produtos = produtos;
         this.valorTotal = valorTotal;
         this.formaDePagamento = formaDePagamento;
         this.tipoEntrega = tipoEntrega;
+        this.entregaName = entrega;
         this.data = LocalDate.now();
     }
 
@@ -66,6 +71,14 @@ public class Compra {
 
     public TipoProdutoName getTipoEntrega() {
         return tipoEntrega;
+    }
+
+    public EntregaName getEntregaName() {
+        return entregaName;
+    }
+
+    public void setEntregaName(EntregaName entregaName) {
+        this.entregaName = entregaName;
     }
 
     @Override

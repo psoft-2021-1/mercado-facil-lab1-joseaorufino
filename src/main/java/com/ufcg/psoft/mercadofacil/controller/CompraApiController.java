@@ -69,7 +69,7 @@ public class CompraApiController {
         TipoProdutoName tipoEntregaProduto = carrinhoService.getEntregaProduto(cliente);
         BigDecimal valorTotal = carrinhoService.calculaValorTotalCarrinho(cliente, formaDePagamento, tipoDeCliente, entrega, tipoEntregaProduto);
 
-        Compra compra = new Compra(cliente, valorTotal, produtosCarrinho, formaDePagamento.getFormaDePagamentoName(), tipoEntregaProduto);
+        Compra compra = new Compra(cliente, valorTotal, produtosCarrinho, formaDePagamento.getFormaDePagamentoName(), tipoEntregaProduto, entrega.getEntregaName());
         compraService.salvarCompraCadastrada(compra);
         carrinhoService.limparCarrinho(cliente);
         clienteService.salvarClienteCadastrado(cliente);
