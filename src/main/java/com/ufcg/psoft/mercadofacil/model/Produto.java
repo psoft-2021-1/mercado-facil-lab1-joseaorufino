@@ -1,11 +1,9 @@
 package com.ufcg.psoft.mercadofacil.model;
 
 import java.math.BigDecimal;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
+import com.ufcg.psoft.mercadofacil.components.produto.TipoProdutoName;
 import com.ufcg.psoft.mercadofacil.model.Produto;
 
 @Entity
@@ -26,6 +24,9 @@ public class Produto {
 	private String categoria;
 
 	private boolean isDisponivel;
+
+	@Enumerated(EnumType.STRING)
+	private TipoProdutoName tipoProduto;
 
 	private Produto() {	}
 
@@ -88,6 +89,14 @@ public class Produto {
 
 	public boolean isDisponivel() {
 		return this.isDisponivel;
+	}
+
+	public TipoProdutoName getTipoProduto() {
+		return tipoProduto;
+	}
+
+	public void setTipoProduto(TipoProdutoName tipoProduto) {
+		this.tipoProduto = tipoProduto;
 	}
 
 	@Override

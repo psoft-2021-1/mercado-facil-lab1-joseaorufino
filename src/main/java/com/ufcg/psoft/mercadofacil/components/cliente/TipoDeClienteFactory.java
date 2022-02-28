@@ -1,8 +1,7 @@
-package com.ufcg.psoft.mercadofacil.util;
+package com.ufcg.psoft.mercadofacil.components.cliente;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -14,13 +13,13 @@ public class TipoDeClienteFactory {
 
     @Autowired
     public TipoDeClienteFactory(Set<TipoDeCliente> tipoDeClienteSet) {
-        criarFormaDePagamento(tipoDeClienteSet);
+        criarTIpoDeCliente(tipoDeClienteSet);
     }
 
     public TipoDeCliente encontrarTipoDeCliente(TipoDeClienteName tipoDeCLienteName) {
         return tiposDeCliente.get(tipoDeCLienteName);
     }
-    private void criarFormaDePagamento(Set<TipoDeCliente> tipoDeClienteSet) {
+    private void criarTIpoDeCliente(Set<TipoDeCliente> tipoDeClienteSet) {
         tiposDeCliente = new HashMap<TipoDeClienteName, TipoDeCliente>();
         tipoDeClienteSet.forEach(
                 tipoDeCliente -> tiposDeCliente.put(tipoDeCliente.getTipoDeCLienteName(), tipoDeCliente));

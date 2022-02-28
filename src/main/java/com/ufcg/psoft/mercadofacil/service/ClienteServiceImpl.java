@@ -1,14 +1,14 @@
 package com.ufcg.psoft.mercadofacil.service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import com.ufcg.psoft.mercadofacil.DTO.FormaDePagamentoDTO;
 import com.ufcg.psoft.mercadofacil.DTO.TipoDeClienteDTO;
 import com.ufcg.psoft.mercadofacil.model.*;
-import com.ufcg.psoft.mercadofacil.util.*;
+import com.ufcg.psoft.mercadofacil.components.cliente.TipoDeCliente;
+import com.ufcg.psoft.mercadofacil.components.cliente.TipoDeClienteFactory;
+import com.ufcg.psoft.mercadofacil.components.cliente.TipoDeClienteName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

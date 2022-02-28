@@ -1,7 +1,9 @@
 package com.ufcg.psoft.mercadofacil.model;
 
-import com.ufcg.psoft.mercadofacil.util.FormaDePagamentoName;
-import com.ufcg.psoft.mercadofacil.util.TipoDeClienteName;
+import com.ufcg.psoft.mercadofacil.components.pagamento.FormaDePagamentoName;
+import com.ufcg.psoft.mercadofacil.components.cliente.TipoDeClienteName;
+import com.ufcg.psoft.mercadofacil.components.produto.TipoProdutoName;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -26,15 +28,19 @@ public class Compra {
     @Enumerated(EnumType.STRING)
     private FormaDePagamentoName formaDePagamento;
 
+    @Enumerated(EnumType.STRING)
+    private TipoProdutoName tipoEntrega;
+
     private LocalDate data;
 
     private Compra() {}
 
-    public Compra(Cliente cliente, BigDecimal valorTotal, List<Produto> produtos, FormaDePagamentoName formaDePagamento) {
+    public Compra(Cliente cliente, BigDecimal valorTotal, List<Produto> produtos, FormaDePagamentoName formaDePagamento, TipoProdutoName tipoEntrega) {
         this.cliente = cliente;
         this.produtos = produtos;
         this.valorTotal = valorTotal;
         this.formaDePagamento = formaDePagamento;
+        this.tipoEntrega = tipoEntrega;
         this.data = LocalDate.now();
     }
 
@@ -57,6 +63,10 @@ public class Compra {
     public FormaDePagamentoName getFormaDePagamento() { return formaDePagamento; }
 
     public TipoDeClienteName getTipoDeCliente() { return cliente.getTipoDeCliente(); }
+
+    public TipoProdutoName getTipoEntrega() {
+        return tipoEntrega;
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -1,5 +1,4 @@
-package com.ufcg.psoft.mercadofacil.util;
-
+package com.ufcg.psoft.mercadofacil.components.pagamento;
 
 public enum FormaDePagamentoName {
     BOLETO(),

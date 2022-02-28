@@ -3,13 +3,18 @@ package com.ufcg.psoft.mercadofacil.controller;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+
+import com.ufcg.psoft.mercadofacil.DTO.EntregaDTO;
 import com.ufcg.psoft.mercadofacil.DTO.FormaDePagamentoDTO;
+import com.ufcg.psoft.mercadofacil.components.entrega.Entrega;
+import com.ufcg.psoft.mercadofacil.components.produto.TipoProduto;
+import com.ufcg.psoft.mercadofacil.components.produto.TipoProdutoName;
 import com.ufcg.psoft.mercadofacil.model.Compra;
+import com.ufcg.psoft.mercadofacil.service.*;
 import com.ufcg.psoft.mercadofacil.util.*;
 import com.ufcg.psoft.mercadofacil.model.Produto;
-import com.ufcg.psoft.mercadofacil.service.CarrinhoService;
-import com.ufcg.psoft.mercadofacil.service.CompraService;
-import com.ufcg.psoft.mercadofacil.service.PagamentoService;
+import com.ufcg.psoft.mercadofacil.components.cliente.TipoDeCliente;
+import com.ufcg.psoft.mercadofacil.components.pagamento.FormaDePagamento;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import com.ufcg.psoft.mercadofacil.model.Cliente;
-import com.ufcg.psoft.mercadofacil.service.ClienteService;
 
 @RestController
 @RequestMapping("/api")
@@ -34,18 +38,25 @@ public class CompraApiController {
     CompraService compraService;
     @Autowired
     PagamentoService pagamentoService;
+    @Autowired
+    EntregaService entregaService;
 
-    @RequestMapping(value = "/compras/{idCliente}/{formaDePagamentoNome}/finalizar", method = RequestMethod.POST)
-    public ResponseEntity<?> finalizarCompra(@PathVariable("idCliente") long idCliente, @PathVariable("formaDePagamentoNome") String formaDePagamentoNome) {
+    @RequestMapping(value = "/compras/{idCliente}/{formaDePagamentoNome}/{entregaNome}/finalizar", method = RequestMethod.POST)
+    public ResponseEntity<?> finalizarCompra(@PathVariable("idCliente") long idCliente, @PathVariable("formaDePagamentoNome") String formaDePagamentoNome,
+            @PathVariable("entregaNome") String entregaNome) {
 
         Optional<Cliente> clienteOp = clienteService.getClienteById(idCliente);
         FormaDePagamento formaDePagamento = pagamentoService.getFormaDePagamentoByNome(formaDePagamentoNome);
+        Entrega entrega = entregaService.getEntregaByNome(entregaNome);
 
         if (!clienteOp.isPresent()) {
             return ErroCliente.erroClienteNaoEnconrtrado(idCliente);
         }
         if (formaDePagamento == null) {
             return ErroCompra.erroFormaDePagamentoNaoDisponivel(formaDePagamentoNome);
+        }
+        if (entrega == null) {
+            return ErroCompra.erroEntregaNaoDisponivel(entregaNome);
         }
 
         Cliente cliente = clienteOp.get();
@@ -55,9 +66,10 @@ public class CompraApiController {
             return ErroCliente.erroSemProdutosNoCarrinho();
         }
         List<Produto> produtosCarrinho = List.copyOf(carrinhoService.getProdutosCarrinho(cliente));
-        BigDecimal valorTotal = carrinhoService.getValorTotalCarrinho(cliente, formaDePagamento, tipoDeCliente);
+        TipoProdutoName tipoEntregaProduto = carrinhoService.getEntregaProduto(cliente);
+        BigDecimal valorTotal = carrinhoService.calculaValorTotalCarrinho(cliente, formaDePagamento, tipoDeCliente, entrega, tipoEntregaProduto);
 
-        Compra compra = new Compra(cliente, valorTotal, produtosCarrinho, formaDePagamento.getFormaDePagamentoName());
+        Compra compra = new Compra(cliente, valorTotal, produtosCarrinho, formaDePagamento.getFormaDePagamentoName(), tipoEntregaProduto);
         compraService.salvarCompraCadastrada(compra);
         carrinhoService.limparCarrinho(cliente);
         clienteService.salvarClienteCadastrado(cliente);
@@ -103,6 +115,14 @@ public class CompraApiController {
         List<FormaDePagamentoDTO> formas = pagamentoService.listarFormasDePagamento();
 
         return new ResponseEntity<List<FormaDePagamentoDTO>>(formas, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/compras/entregas", method = RequestMethod.GET)
+    public ResponseEntity<?> listarTiposDeEntrega() {
+
+        List<EntregaDTO> tiposDeEntrega = entregaService.listarTiposDeEntrega();
+
+        return new ResponseEntity<List<EntregaDTO>>(tiposDeEntrega, HttpStatus.OK);
     }
 
 }

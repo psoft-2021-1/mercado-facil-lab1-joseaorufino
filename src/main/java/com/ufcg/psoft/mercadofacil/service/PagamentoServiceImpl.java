@@ -1,9 +1,9 @@
 package com.ufcg.psoft.mercadofacil.service;
 
 import com.ufcg.psoft.mercadofacil.DTO.FormaDePagamentoDTO;
-import com.ufcg.psoft.mercadofacil.util.FormaDePagamento;
-import com.ufcg.psoft.mercadofacil.util.FormaDePagamentoFactory;
-import com.ufcg.psoft.mercadofacil.util.FormaDePagamentoName;
+import com.ufcg.psoft.mercadofacil.components.pagamento.FormaDePagamento;
+import com.ufcg.psoft.mercadofacil.components.pagamento.FormaDePagamentoFactory;
+import com.ufcg.psoft.mercadofacil.components.pagamento.FormaDePagamentoName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import java.util.List;
 public class PagamentoServiceImpl implements PagamentoService {
 
     @Autowired
-    private FormaDePagamentoFactory formaDePagamentoFactory;
+    FormaDePagamentoFactory formaDePagamentoFactory;
 
     @Override
     public List<FormaDePagamentoDTO> listarFormasDePagamento() {
@@ -22,7 +22,6 @@ public class PagamentoServiceImpl implements PagamentoService {
         for (FormaDePagamentoName formaDePagamento : FormaDePagamentoName.values()) {
             lista.add(new FormaDePagamentoDTO(formaDePagamento));
         }
-
         return lista;
     }
 

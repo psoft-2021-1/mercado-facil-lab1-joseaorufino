@@ -1,4 +1,4 @@
-package com.ufcg.psoft.mercadofacil.util;
+package com.ufcg.psoft.mercadofacil.components.pagamento;
 
 import java.math.BigDecimal;
 

@@ -6,7 +6,7 @@ import com.ufcg.psoft.mercadofacil.DTO.ClienteDTO;
 import com.ufcg.psoft.mercadofacil.DTO.TipoDeClienteDTO;
 import com.ufcg.psoft.mercadofacil.model.Cliente;
 import com.ufcg.psoft.mercadofacil.model.Compra;
-import com.ufcg.psoft.mercadofacil.util.TipoDeCliente;
+import com.ufcg.psoft.mercadofacil.components.cliente.TipoDeCliente;
 
 public interface ClienteService {
 

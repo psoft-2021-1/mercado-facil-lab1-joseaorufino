@@ -1,7 +1,7 @@
 package com.ufcg.psoft.mercadofacil.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ufcg.psoft.mercadofacil.util.TipoDeClienteName;
+import com.ufcg.psoft.mercadofacil.components.cliente.TipoDeClienteName;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;

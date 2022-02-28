@@ -1,4 +1,4 @@
-package com.ufcg.psoft.mercadofacil.util;
+package com.ufcg.psoft.mercadofacil.components.pagamento;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

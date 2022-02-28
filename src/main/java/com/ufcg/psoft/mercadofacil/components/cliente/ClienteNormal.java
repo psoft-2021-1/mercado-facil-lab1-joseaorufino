@@ -1,4 +1,4 @@
-package com.ufcg.psoft.mercadofacil.util;
+package com.ufcg.psoft.mercadofacil.components.cliente;
 
 import com.ufcg.psoft.mercadofacil.model.Cliente;
 import org.springframework.stereotype.Component;

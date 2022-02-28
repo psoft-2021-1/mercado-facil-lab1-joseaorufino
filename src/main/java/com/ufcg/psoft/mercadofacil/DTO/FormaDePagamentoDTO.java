@@ -1,6 +1,6 @@
 package com.ufcg.psoft.mercadofacil.DTO;
 
-import com.ufcg.psoft.mercadofacil.util.FormaDePagamentoName;
+import com.ufcg.psoft.mercadofacil.components.pagamento.FormaDePagamentoName;
 
 public class FormaDePagamentoDTO {
 

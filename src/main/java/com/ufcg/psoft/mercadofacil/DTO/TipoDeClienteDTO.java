@@ -1,6 +1,6 @@
 package com.ufcg.psoft.mercadofacil.DTO;
 
-import com.ufcg.psoft.mercadofacil.util.TipoDeClienteName;
+import com.ufcg.psoft.mercadofacil.components.cliente.TipoDeClienteName;
 
 public class TipoDeClienteDTO {
 

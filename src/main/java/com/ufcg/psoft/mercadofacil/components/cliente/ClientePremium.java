@@ -1,4 +1,4 @@
-package com.ufcg.psoft.mercadofacil.util;
+package com.ufcg.psoft.mercadofacil.components.cliente;
 
 import com.ufcg.psoft.mercadofacil.model.Cliente;
 import com.ufcg.psoft.mercadofacil.model.Produto;
@@ -7,16 +7,17 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Component
-public class ClienteEspecial implements TipoDeCliente {
+public class ClientePremium implements TipoDeCliente {
 
     @Override
-    public TipoDeClienteName getTipoDeCLienteName() { return TipoDeClienteName.ESPECIAL; }
+    public TipoDeClienteName getTipoDeCLienteName() { return TipoDeClienteName.PREMIUM; }
 
     @Override
     public BigDecimal calculaValorComDesconto(BigDecimal valorInicial, Cliente cliente) {
+
         List<Produto> produtos = cliente.getCarrinho().getProdutos();
 
-        if (produtos.size() > 10) {
+        if (produtos.size() > 5) {
             BigDecimal decremento = valorInicial.multiply(new BigDecimal(0.10));
             BigDecimal valorFinal = valorInicial.subtract(decremento);
 
