@@ -1,5 +1,7 @@
 package com.ufcg.psoft.mercadofacil.DTO;
 
+import com.ufcg.psoft.mercadofacil.components.produto.TipoProdutoName;
+
 import java.math.BigDecimal;
 
 public class ProdutoDTO {
@@ -13,6 +15,8 @@ public class ProdutoDTO {
 	private String fabricante;
 	
 	private String categoria;
+
+	private TipoProdutoName tipoProduto;
 
 	public String getNome() {
 		return nome;
@@ -53,4 +57,13 @@ public class ProdutoDTO {
 	public void setCategoria(String categoria) {
 		this.categoria = categoria;
 	}
+
+	public TipoProdutoName getTipoProduto() {
+		return tipoProduto;
+	}
+
+	public void setTipoProduto(TipoProdutoName tipoProduto) {
+		this.tipoProduto = tipoProduto;
+	}
+
 }

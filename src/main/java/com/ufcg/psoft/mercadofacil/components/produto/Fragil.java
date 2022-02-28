@@ -14,7 +14,7 @@ public class Fragil implements TipoProduto {
 
     @Override
     public BigDecimal calculaValorComAcrescimo(BigDecimal valorInicial) {
-        BigDecimal acrescimo = valorInicial.multiply(new BigDecimal(1.15)); // 15% de aumento por ser Fragil
+        BigDecimal acrescimo = valorInicial.multiply(new BigDecimal(0.15)); // 15% de aumento por ser Fragil
         BigDecimal valorFinal = valorInicial.add(acrescimo);
 
         return valorFinal;

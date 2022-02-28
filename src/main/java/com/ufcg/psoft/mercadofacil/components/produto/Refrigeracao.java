@@ -14,7 +14,7 @@ public class Refrigeracao implements TipoProduto {
 
     @Override
     public BigDecimal calculaValorComAcrescimo(BigDecimal valorInicial) {
-        BigDecimal acrescimo = valorInicial.multiply(new BigDecimal(1.25)); // 25% de aumento por ser Refrigeracao
+        BigDecimal acrescimo = valorInicial.multiply(new BigDecimal(0.3)); // 25% de aumento por ser Refrigeracao
         BigDecimal valorFinal = valorInicial.add(acrescimo);
 
         return valorFinal;

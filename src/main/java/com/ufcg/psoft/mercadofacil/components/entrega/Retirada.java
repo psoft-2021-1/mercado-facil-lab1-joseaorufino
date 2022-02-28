@@ -12,7 +12,7 @@ public class Retirada implements Entrega {
 
     @Override
     public BigDecimal calculaValorComEntrega(BigDecimal valorInicial, Cliente cliente) {
-        return new BigDecimal(0);
+        return valorInicial;
     }
 
 }
