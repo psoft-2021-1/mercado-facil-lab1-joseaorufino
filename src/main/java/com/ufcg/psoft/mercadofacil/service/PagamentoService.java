@@ -1,15 +1,13 @@
 package com.ufcg.psoft.mercadofacil.service;
 
-import com.ufcg.psoft.mercadofacil.model.FormaDePagamento;
-
-import java.math.BigDecimal;
+import com.ufcg.psoft.mercadofacil.DTO.FormaDePagamentoDTO;
+import com.ufcg.psoft.mercadofacil.components.pagamento.FormaDePagamento;
+import java.util.List;
 
 public interface PagamentoService {
 
-    public String listarFormasDePagamento();
+    public List<FormaDePagamentoDTO> listarFormasDePagamento();
 
-    public FormaDePagamento getFormaDePagamentoById(Long idFormaDePagamento);
-
-    public BigDecimal getAcrescimo(Long idFormaDePagamento);
+    public FormaDePagamento getFormaDePagamentoByNome(String nomeFormaDePagamento);
 
 }

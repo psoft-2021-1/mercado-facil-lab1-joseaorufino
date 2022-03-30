@@ -1,10 +1,14 @@
 package com.ufcg.psoft.mercadofacil.service;
 
-import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.ufcg.psoft.mercadofacil.DTO.TipoDeClienteDTO;
 import com.ufcg.psoft.mercadofacil.model.*;
+import com.ufcg.psoft.mercadofacil.components.cliente.TipoDeCliente;
+import com.ufcg.psoft.mercadofacil.components.cliente.TipoDeClienteFactory;
+import com.ufcg.psoft.mercadofacil.components.cliente.TipoDeClienteName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +20,9 @@ public class ClienteServiceImpl implements ClienteService {
 
 	@Autowired
 	private ClienteRepository clienteRepository;
+
+	@Autowired
+	private TipoDeClienteFactory tipoDeClienteFactory;
 
 	@Override
 	public Optional<Cliente> getClienteById(Long id) { return clienteRepository.findById(id); }
@@ -71,31 +78,30 @@ public class ClienteServiceImpl implements ClienteService {
 	}
 
 	@Override
-	public String listarTiposDeCliente() {
-		return new String(TipoDeCliente.NORMAL.toString() + "\n" +
-				TipoDeCliente.ESPECIAL.toString() + "\n" + TipoDeCliente.PREMIUM.toString());
+	public List<TipoDeClienteDTO> listarTiposDeCliente() {
+		List<TipoDeClienteDTO> lista = new ArrayList<TipoDeClienteDTO>();
+
+		for (TipoDeClienteName tipoDeClienteName : TipoDeClienteName.values()) {
+			lista.add(new TipoDeClienteDTO(tipoDeClienteName));
+		}
+
+		return lista;
 	}
 
 	@Override
 	public Cliente estabelecerTipoDeCliente(Cliente cliente, TipoDeCliente tipoDeCliente) {
-		cliente.setTipoDeCliente(tipoDeCliente);
+		cliente.setTipoDeCliente(tipoDeCliente.getTipoDeCLienteName());
 
 		return cliente;
 	}
 
 	@Override
-	public TipoDeCliente getTipoDeClienteById(Long idTipoDeCliente) {
-		for (TipoDeCliente tipoDeCliente : TipoDeCliente.values()) {
-			if (idTipoDeCliente.equals(tipoDeCliente.getId()))
-				return tipoDeCliente;
+	public TipoDeCliente getTipoDeClienteByNome(String nomeTipoDeCliente) {
+		for (TipoDeClienteName tipoDeClienteName : TipoDeClienteName.values()) {
+			if (nomeTipoDeCliente.equals(tipoDeClienteName.toString()))
+				return tipoDeClienteFactory.encontrarTipoDeCliente(tipoDeClienteName);
 		}
 		return null;
-	}
-
-	@Override
-	public BigDecimal getDescontoByIdTipoDeCliente(Long idTipoDeCliente) {
-		TipoDeCliente tipoDeCliente = getTipoDeClienteById(idTipoDeCliente);
-		return tipoDeCliente.getDesconto();
 	}
 
 

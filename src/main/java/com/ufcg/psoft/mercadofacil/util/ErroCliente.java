@@ -18,7 +18,7 @@ public class ErroCliente {
 
 	static final String CLIENTE_JA_CADASTRADO = "O cliente %s nome %s já esta cadastrado";
 
-	static final String TIPO_DE_CLIENTE_INDISPONIVEL = "Tipo de cliente com id %s não está disponível";
+	static final String TIPO_DE_CLIENTE_INDISPONIVEL = "Tipo de cliente %s não está disponível";
 
 	public static ResponseEntity<CustomErrorType> erroClienteNaoEnconrtrado(long id) {
 		return new ResponseEntity<CustomErrorType>(new CustomErrorType(String.format(ErroCliente.CLIENTE_NAO_CASTRADO, id)),
@@ -40,8 +40,8 @@ public class ErroCliente {
 				HttpStatus.NO_CONTENT);
 	}
 
-	public static ResponseEntity<?> erroTipoDeClienteNaoDisponivel(long id) {
-		return new ResponseEntity<CustomErrorType>(new CustomErrorType(String.format(ErroCliente.TIPO_DE_CLIENTE_INDISPONIVEL, id)),
+	public static ResponseEntity<?> erroTipoDeClienteNaoDisponivel(String tipoDeClienteNome) {
+		return new ResponseEntity<CustomErrorType>(new CustomErrorType(String.format(ErroCliente.TIPO_DE_CLIENTE_INDISPONIVEL, tipoDeClienteNome)),
 				HttpStatus.NOT_IMPLEMENTED);
 	}
 

@@ -1,7 +1,13 @@
 package com.ufcg.psoft.mercadofacil.service;
 
+import com.ufcg.psoft.mercadofacil.components.entrega.Entrega;
+import com.ufcg.psoft.mercadofacil.components.produto.TipoProduto;
+import com.ufcg.psoft.mercadofacil.components.produto.TipoProdutoFactory;
+import com.ufcg.psoft.mercadofacil.components.produto.TipoProdutoName;
 import com.ufcg.psoft.mercadofacil.model.*;
 import com.ufcg.psoft.mercadofacil.repository.CarrinhoRepository;
+import com.ufcg.psoft.mercadofacil.components.pagamento.FormaDePagamento;
+import com.ufcg.psoft.mercadofacil.components.cliente.TipoDeCliente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +23,8 @@ public class CarrinhoServiceImpl implements CarrinhoService {
     ClienteService clienteService;
     @Autowired
     CarrinhoRepository carrinhoRepository;
+    @Autowired
+    TipoProdutoFactory tipoProdutoFactory;
 
     @Override
     public Carrinho getCarrinho(Cliente cliente) {
@@ -31,7 +39,7 @@ public class CarrinhoServiceImpl implements CarrinhoService {
     @Override
     public Cliente addProdutoCarrinho(Cliente cliente, Produto produto) {
         Carrinho carrinho = cliente.getCarrinho();
-        verificaCarrinhoNull(carrinho, cliente);
+        carrinho = verificaCarrinhoNull(carrinho, cliente);
         carrinho.addProduto(produto);
         carrinho.setCliente(cliente);
         this.salvarCarrinho(carrinho);
@@ -60,23 +68,38 @@ public class CarrinhoServiceImpl implements CarrinhoService {
     }
 
     @Override
-    public BigDecimal getValorTotalCarrinho(Cliente cliente, BigDecimal acrescimo) {
-        return calculaValorTotalCarrinho(cliente, acrescimo);
+    public BigDecimal calculaValorTotalCarrinho(Cliente cliente, FormaDePagamento formaDePagamento, TipoDeCliente tipoDeCliente, Entrega entrega, TipoProdutoName tipoProdutoName) {
+        BigDecimal valorComAcrescimoPagamento = formaDePagamento.calculaValorComAcrescimo(calculaValorInicialCarrinho(cliente));
+        TipoProduto tipoEntregaProduto = tipoProdutoFactory.encontrarTipoProduto(tipoProdutoName);
+        BigDecimal valorComAcrescimoProdutoEntrega =  tipoEntregaProduto.calculaValorComAcrescimo(valorComAcrescimoPagamento);
+        BigDecimal valorComDesconto = tipoDeCliente.calculaValorComDesconto(valorComAcrescimoProdutoEntrega, cliente);
+
+        return entrega.calculaValorComEntrega(valorComDesconto, cliente);
     }
 
-    private BigDecimal calculaValorTotalCarrinho(Cliente cliente, BigDecimal acrescimo) {
+    @Override
+    public TipoProdutoName getEntregaProduto(Cliente cliente) {
         List<Produto> produtos = cliente.getCarrinho().getProdutos();
-        BigDecimal soma = new BigDecimal(0);
+        TipoProdutoName tipoProdutoEntrega = TipoProdutoName.COMUM;
 
         for (Produto produto : produtos) {
-            soma = soma.add(produto.getPreco());
+            if (produto.getTipoProduto().equals(TipoProdutoName.REFRIGERACAO)) {
+                return TipoProdutoName.REFRIGERACAO;
+            } if (produto.getTipoProduto().equals(TipoProdutoName.FRAGIL)) {
+                tipoProdutoEntrega = TipoProdutoName.FRAGIL;
+            }
         }
-        BigDecimal incremento = soma.multiply(acrescimo);
-        BigDecimal decremento = soma.multiply(cliente.getDesconto());
-        soma = soma.add(incremento);
-        soma = soma.subtract(decremento);
+        return tipoProdutoEntrega;
+    }
 
-        return soma;
+    private BigDecimal calculaValorInicialCarrinho(Cliente cliente) {
+        List<Produto> produtos = cliente.getCarrinho().getProdutos();
+        BigDecimal somaInicial = new BigDecimal(0);
+
+        for (Produto produto : produtos) {
+            somaInicial = somaInicial.add(produto.getPreco());
+        }
+        return somaInicial;
     }
 
     @Override
@@ -89,12 +112,14 @@ public class CarrinhoServiceImpl implements CarrinhoService {
         carrinhoRepository.save(carrinho);
     }
 
-    private void verificaCarrinhoNull(Carrinho carrinho, Cliente cliente) {
+    private Carrinho verificaCarrinhoNull(Carrinho carrinho, Cliente cliente) {
         if (carrinho == null) {
             carrinho = new Carrinho();
             carrinho.setCliente(cliente);
             cliente.setCarrinho(carrinho);
             clienteService.salvarClienteCadastrado(cliente);
+            salvarCarrinho(carrinho);
         }
+        return carrinho;
     }
 }

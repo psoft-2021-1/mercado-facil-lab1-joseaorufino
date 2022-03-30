@@ -1,5 +1,10 @@
 package com.ufcg.psoft.mercadofacil.model;
 
+import com.ufcg.psoft.mercadofacil.components.entrega.EntregaName;
+import com.ufcg.psoft.mercadofacil.components.pagamento.FormaDePagamentoName;
+import com.ufcg.psoft.mercadofacil.components.cliente.TipoDeClienteName;
+import com.ufcg.psoft.mercadofacil.components.produto.TipoProdutoName;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -21,17 +26,26 @@ public class Compra {
 
     private BigDecimal valorTotal;
 
-    private FormaDePagamento formaDePagamento;
+    @Enumerated(EnumType.STRING)
+    private FormaDePagamentoName formaDePagamento;
+
+    @Enumerated(EnumType.STRING)
+    private TipoProdutoName tipoEntrega;
+
+    @Enumerated(EnumType.STRING)
+    private EntregaName entregaName;
 
     private LocalDate data;
 
     private Compra() {}
 
-    public Compra(Cliente cliente, BigDecimal valorTotal, List<Produto> produtos, FormaDePagamento formaDePagamento) {
+    public Compra(Cliente cliente, BigDecimal valorTotal, List<Produto> produtos, FormaDePagamentoName formaDePagamento, TipoProdutoName tipoEntrega, EntregaName entrega) {
         this.cliente = cliente;
         this.produtos = produtos;
         this.valorTotal = valorTotal;
         this.formaDePagamento = formaDePagamento;
+        this.tipoEntrega = tipoEntrega;
+        this.entregaName = entrega;
         this.data = LocalDate.now();
     }
 
@@ -51,15 +65,21 @@ public class Compra {
 
     public LocalDate getData() { return  data; }
 
-    public FormaDePagamento getFormaDePagamento() { return formaDePagamento; }
+    public FormaDePagamentoName getFormaDePagamento() { return formaDePagamento; }
 
-    public String getTextoFormaDePagamento() { return formaDePagamento.toString(); }
+    public TipoDeClienteName getTipoDeCliente() { return cliente.getTipoDeCliente(); }
 
-    public String getTextoTipoDeCliente() { return cliente.getTipoDeCliente().toString(); }
+    public TipoProdutoName getTipoEntrega() {
+        return tipoEntrega;
+    }
 
-    public BigDecimal getAcrescimo() { return formaDePagamento.getAcrescimo(); }
+    public EntregaName getEntregaName() {
+        return entregaName;
+    }
 
-    public BigDecimal getPossivelDesconto() { return cliente.getDesconto(); }
+    public void setEntregaName(EntregaName entregaName) {
+        this.entregaName = entregaName;
+    }
 
     @Override
     public boolean equals(Object o) {
